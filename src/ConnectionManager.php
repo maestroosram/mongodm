@@ -163,14 +163,16 @@ class ConnectionManager
         if (isset($config['username']) && isset($config['password'])) {
             $config['hostnames'] = $config['username'] . ':' . $config['password'] . '@' . $config['hostnames'] . '/' . $config['database'];
         }
-
-        /* Add required 'mongodb://' prefix */
-        if (strpos($config['hostnames'], 'mongodb://') !== 0) {
-            $config['hostnames'] = 'mongodb://' . $config['hostnames'];
-        }
-
+        
         if (!isset($config['options']) || !is_array($config['options'])) {
             $config['options'] = array();
+        }
+        
+        $protocol = $config['options']['protocol'] ?? 'mongodb://';
+
+        /* Add required 'mongodb://' prefix */
+        if (strpos($config['hostnames'], $protocol) !== 0) {
+            $config['hostnames'] = $protocol . $config['hostnames'];
         }
 
         /* Create connection object, attempt to connect */
